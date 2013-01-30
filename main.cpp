@@ -20,22 +20,44 @@ int main(void) {
   color_t shadow = {0,0,0};
 
   // make a 640x480 image (allocates buffer on the heap)
-  Image img(640, 480);
+  Image img(1280, 1024);
 
   // coordinate of the eye(camera)
-  vector3D eye = {320,240,0};
+  vector3D eye = {640,512,0};
   vector3D up = {1,0,0};
-  vector3D screen = {0, 0, 90}; //look
+  vector3D screen = {0, 0, 150}; //look
 
   // coordinate of the light source
-  vector3D light = {320,400,-55};
+  vector3D light = {640,700,-55};
 
   // create spheres
-  sphere_t spheres[] = {
-	  {{0,480,1600}, 1200, {1.0,0.1,0.1}, 1.0},
-	  {{300,240,600}, 300, {0.1,1.0,0.1}, 1.0},
-	  {{400,200,300}, 100, {0.1,0.1,1.0}, 1.0}
-  };
+  sphere_t spheres[100];
+  int v0, v1, v2, v3, sx = -1500, sy = -1500, sz = 300, sr = 50;
+  for (int i = 0; i < 100; i++) {
+     if ( i % 10 == 0 && i > 0) {
+        sx = -1500;
+        sy = sy + 500;
+     }
+     v0 = rand() % 500 + sr;
+     v1 = rand() + 0.1;
+     v2 = rand() + 0.1;
+     v3 = rand() + 0.1;
+     sx = sx + 1.5*v0 + 50;
+     if ( v0 <= 50 )
+        sz = 300;
+     if ( v0 >= 100 && v0 <= 300)
+        sz = 800;
+     if ( v0 > 300)
+        sz = 1500;
+     spheres[i]._center.x = sx;
+     spheres[i]._center.y = sy;
+     spheres[i]._center.z = sz;
+     spheres[i]._radius = v0;
+     spheres[i]._color.r = v1;
+     spheres[i]._color.g = v2;
+     spheres[i]._color.b = v3;
+  }
+
 
   float t_hit, min_t, dl, intensity, att, v_dot, specular;
   vector3D p_hit, normal, l, ln, dir, ref;
@@ -46,8 +68,8 @@ int main(void) {
   float Kd = 0.9; //diffuse
 
   // do ray tracing for each pixel
-  for (int i=0; i < 640; i++) {
-    for (int j=0; j < 480; j++) {
+  for (int i=0; i < 1280; i++) {
+    for (int j=0; j < 1024; j++) {
 		// setup ray
 		screen.x=i;
 		screen.y=j;
